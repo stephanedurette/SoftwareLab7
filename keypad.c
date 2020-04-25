@@ -1,9 +1,26 @@
 #include "keypad.h"
+#include "LED.h"
+#include "utils.h"
+
+uint8_t len = 4;
+uint16_t outputs[] = {12, 13, 14, 15};
+uint16_t inputs[] = {1, 2, 3, 5};
 
 //Initializes pins used as keyboard columns and rows
 void InitKeypad(){
+	RCC->AHB2ENR |=   RCC_AHB2ENR_GPIOAEN | RCC_AHB2ENR_GPIOEEN;
 	
-		/* Enable GPIOs clock */ 	
+	for(int i = 0; i < len; i++){
+		FORCE_BITS(GPIOE -> MODER, 0x11 << (2 * outputs[i]), 0x01 << (2 * outputs[i])); //digital output = 0x01
+		FORCE_BITS(GPIOE -> OTYPER, 0x11 << (2 * outputs[i]), 0x01 << (2 * outputs[i])); //open drain = 0x01
+		FORCE_BITS(GPIOE -> OSPEEDR, 0x11 << (2 * outputs[i]), 0x00 << (2 * outputs[i])); //low speed = 0x00
+		FORCE_BITS(GPIOE -> PUPDR, 0x11 << (2 * outputs[i]), 0x01 << (2 * outputs[i])); //pull up = 0x01
+		
+		FORCE_BITS(GPIOA -> MODER, 0x11 << (2 * inputs[i]), 0x00 << (2 * inputs[i])); //input mode = 0x00
+		FORCE_BITS(GPIOA -> PUPDR, 0x11 << (2 * inputs[i]), 0x01 << (2 * inputs[i])); //pull up= 0x01
+	}
+	/*
+		// Enable GPIOs clock // 	
 	RCC->AHB2ENR |=   RCC_AHB2ENR_GPIOAEN | RCC_AHB2ENR_GPIOEEN;
 	
 	//GPIO init Rows as open drain output with pullups enabled PE12 through PE15
@@ -43,6 +60,8 @@ void InitKeypad(){
 	
 	
 	return;
+	*/
+	return;
 }
 
 
@@ -50,6 +69,20 @@ void InitKeypad(){
 //Returns what key is pressed in the form of Key enum
 enum Keys GetKey( void ){
 	
+	for(int i = 0; i < len; i++){
+		GPIOE -> MODER |= 1 << outputs[i];
+		
+		for(int j = 0; j < len; j++){
+			if (GPIOA -> IDR & (1UL << inputs[j])){
+				return (enum Keys)(i * len + j);
+			}
+		}
+		
+		GPIOE -> MODER &= ~(1 << outputs[i]);
+	}
+	
+	return Key_None;
+	/*
 	//Pull each one of the rows low
 	for(int i = 12; i < 16; i++){
 		GPIOE->MODER |= (1<<(1*i)); //Turn on row
@@ -68,4 +101,5 @@ enum Keys GetKey( void ){
 	}
 	
 	return Key_None;
+	*/
 }
