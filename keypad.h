@@ -19,10 +19,3 @@ void InitKeypad( void );
 #endif
 
 
-<<<<<<< HEAD
-//Initializes pins used as keyboard columns and rows
-void InitKeypad();
-
-#endif
-=======
->>>>>>> 4e42fdce07a41e4d70d31cd644e36019097eebd9
