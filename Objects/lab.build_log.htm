@@ -27,47 +27,16 @@ Project File Date:  04/25/2020
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 6 (build 750)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Target 1'
-<<<<<<< HEAD
-compiling LED.c...
-compiling SysClock.c...
-compiling main.c...
-keypad.h(16): warning:  #1295-D: Deprecated declaration InitKeypad - give arg types
-  void InitKeypad();
-keypad.h(18): warning:  #1-D: last line of file ends without a newline
-  #endif
-main.c: 2 warnings, 0 errors
-assembling startup_stm32l476xx.s...
-compiling lcd.c...
 compiling keypad.c...
-keypad.h(16): warning:  #1295-D: Deprecated declaration InitKeypad - give arg types
-  void InitKeypad();
-keypad.h(18): warning:  #1-D: last line of file ends without a newline
-  #endif
 keypad.c(59): warning:  #188-D: enumerated type mixed with another type
-  				return (enum Keys) (i*COLUMNS) + j;
+  				return  (i*COLUMNS + j);
 keypad.c(63): warning:  #188-D: enumerated type mixed with another type
-  			return (enum Keys) (i*COLUMNS) + 5;
-keypad.c: 4 warnings, 0 errors
-compiling Beeper.c...
-Beeper.c(11): warning:  #177-D: variable "dutyCycle"  was declared but never referenced
-  	float dutyCycle = 0.5;
-Beeper.c: 1 warning, 0 errors
-=======
-compiling keypad.c...
-keypad.c(49): warning:  #1-D: last line of file ends without a newline
-  }
-keypad.c(49): warning:  #940-D: missing return statement at end of non-void function "GetKey" 
-  }
+  			return (i*COLUMNS + 5);
 keypad.c: 2 warnings, 0 errors
->>>>>>> 4e42fdce07a41e4d70d31cd644e36019097eebd9
 linking...
-Program Size: Code=3516 RO-data=424 RW-data=64 ZI-data=1632  
+Program Size: Code=3616 RO-data=424 RW-data=64 ZI-data=1632  
 FromELF: creating hex file...
-<<<<<<< HEAD
-".\Objects\lab.axf" - 0 Error(s), 7 Warning(s).
-=======
 ".\Objects\lab.axf" - 0 Error(s), 2 Warning(s).
->>>>>>> 4e42fdce07a41e4d70d31cd644e36019097eebd9
 
 <h2>Software Packages used:</h2>
 
@@ -90,11 +59,7 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: ARM::CMSIS:CORE:5.3.0
-<<<<<<< HEAD
-Build Time Elapsed:  00:00:08
-=======
-Build Time Elapsed:  00:00:02
->>>>>>> 4e42fdce07a41e4d70d31cd644e36019097eebd9
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>
