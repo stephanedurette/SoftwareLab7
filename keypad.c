@@ -43,3 +43,7 @@ void InitKeypad(){
 	
 	return;
 }
+
+enum Keys GetKey( void ){
+
+}

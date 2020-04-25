@@ -25,11 +25,17 @@ int main(void){
 	System_Clock_Init(); 	// Switch System Clock = 80 MHz
 	LED_Init();						// Init GPIO bits to drive LEDs
 	LCDinit();
+	InitKeypad();
 	InitBeeper();
 	Beep(C4);
 	
 	FOREVER {
-		DELAY;	
+		enum Keys pressed = GetKey();
+		if(pressed == Key_None){
+			StopBeep();
+		} else {
+			Beep(toneFrequencies[pressed]);
+		}
 	}
 	
 } 
