@@ -45,6 +45,7 @@ void InitKeypad(){
 	return;
 }
 
+
 //Scans the Keypad
 //Returns what key is pressed in the form of Key enum
 enum Keys GetKey( void ){
@@ -56,11 +57,11 @@ enum Keys GetKey( void ){
 		//Check the columns
 		for(int j = 1; j < 4; j++){
 			if(GPIOA->IDR & (1UL << j)){
-				return  ((i-12)*COLUMNS + (j-1));
+				return (enum Keys) (i*COLUMNS + j);
 			}
 		}		
 		if(GPIOA->IDR & (1UL << 5)){
-			return ((i-12)*COLUMNS + (5-1));
+			return (enum Keys) (i*COLUMNS + 5);
 		}
 		
 		GPIOE->MODER &= ~(1<<(1*i)); //turn off row
@@ -68,5 +69,3 @@ enum Keys GetKey( void ){
 	
 	return Key_None;
 }
-
-
