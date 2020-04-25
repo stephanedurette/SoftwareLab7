@@ -3,21 +3,22 @@
 #include "utils.h"
 
 uint8_t len = 4;
-uint16_t outputs[] = {12, 13, 14, 15};
-uint16_t inputs[] = {1, 2, 3, 5};
+uint32_t outputs[] = {12, 13, 14, 15};
+uint32_t inputs[] = {1, 2, 3, 5};
 
 //Initializes pins used as keyboard columns and rows
 void InitKeypad(){
+	
 	RCC->AHB2ENR |=   RCC_AHB2ENR_GPIOAEN | RCC_AHB2ENR_GPIOEEN;
 	
-	for(int i = 0; i < len; i++){
-		FORCE_BITS(GPIOE -> MODER, 0x11 << (2 * outputs[i]), 0x01 << (2 * outputs[i])); //digital output = 0x01
-		FORCE_BITS(GPIOE -> OTYPER, 0x11 << (2 * outputs[i]), 0x01 << (2 * outputs[i])); //open drain = 0x01
-		FORCE_BITS(GPIOE -> OSPEEDR, 0x11 << (2 * outputs[i]), 0x00 << (2 * outputs[i])); //low speed = 0x00
-		FORCE_BITS(GPIOE -> PUPDR, 0x11 << (2 * outputs[i]), 0x01 << (2 * outputs[i])); //pull up = 0x01
+	for(uint8_t i = 0; i < len; i++){
+		FORCE_BITS(GPIOE -> MODER, 3UL << (2 * outputs[i]), 1UL << (2 * outputs[i])); //digital output = 01
+		FORCE_BITS(GPIOE -> OTYPER, 1UL << (outputs[i]), 1UL << (outputs[i])); //open drain = 1, push pull = 0
+		FORCE_BITS(GPIOE -> OSPEEDR, 3UL << (2 * outputs[i]), 0 << (2 * outputs[i])); //low speed = 00
+		FORCE_BITS(GPIOE -> PUPDR, 3UL << (2 * outputs[i]), 1UL << (2 * outputs[i])); //pull up = 01
 		
-		FORCE_BITS(GPIOA -> MODER, 0x11 << (2 * inputs[i]), 0x00 << (2 * inputs[i])); //input mode = 0x00
-		FORCE_BITS(GPIOA -> PUPDR, 0x11 << (2 * inputs[i]), 0x01 << (2 * inputs[i])); //pull up= 0x01
+		FORCE_BITS(GPIOA -> MODER, 3UL << (2 * inputs[i]), 0 << (2 * inputs[i])); //input mode = 00
+		FORCE_BITS(GPIOA -> PUPDR, 3UL << (2 * inputs[i]), 1UL << (2 * inputs[i])); //pull up= 01
 	}
 	/*
 		// Enable GPIOs clock // 	
@@ -61,14 +62,35 @@ void InitKeypad(){
 	
 	return;
 	*/
-	return;
 }
 
 
 //Scans the Keypad
 //Returns what key is pressed in the form of Key enum
 enum Keys GetKey( void ){
+	GPIOE -> ODR &= ~(0xF << outputs[0]); //Clear all outputs
 	
+	for (int j = 0; j < len; j++){
+		GPIOE -> ODR |= (1UL << outputs[j]); //Set Current output
+	
+		for (int i = 0; i < len; i++){
+			if (!(GPIOA -> IDR & (1UL << inputs[i]))){
+				return (enum Keys)(j * len + i);
+			}
+		}
+		volatile uint16_t Idr = (GPIOA -> IDR >> 1) & 0x1F;
+		volatile uint16_t Odr = (GPIOE -> ODR >> 12) & 0xF;
+		
+		
+		GPIOE -> ODR &= ~(1UL << outputs[j]); //Set Current output
+	}
+	return Key_None;
+	
+	/*
+	////2
+	//uint8_t len = 4;
+  //uint16_t outputs[] = {12, 13, 14, 15};
+  //uint16_t inputs[] = {1, 2, 3, 5};
 	for(int i = 0; i < len; i++){
 		GPIOE -> MODER |= 1 << outputs[i];
 		
@@ -80,9 +102,10 @@ enum Keys GetKey( void ){
 		
 		GPIOE -> MODER &= ~(1 << outputs[i]);
 	}
-	
 	return Key_None;
-	/*
+	
+	
+	///3
 	//Pull each one of the rows low
 	for(int i = 12; i < 16; i++){
 		GPIOE->MODER |= (1<<(1*i)); //Turn on row
