@@ -12,3 +12,4 @@
 .\objects\main.o: lcd.h
 .\objects\main.o: utils.h
 .\objects\main.o: Beeper.h
+.\objects\main.o: Notes.h

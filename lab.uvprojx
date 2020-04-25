@@ -442,6 +442,11 @@
               <FileType>5</FileType>
               <FilePath>.\Beeper.h</FilePath>
             </File>
+            <File>
+              <FileName>Notes.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Notes.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

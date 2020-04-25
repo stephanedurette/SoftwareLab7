@@ -39,8 +39,7 @@ void InitBeeper( void ){
 	CLR_BITS(TIM4->CCMR1, TIM_CCMR1_OC1M);
 	
 	//Set the duty cycle
-	TIM4 -> CCR1 = dutyCycle * (TIM4->ARR + 1);
-	//TIM4 -> CCR1 = 500;
+	TIM4 -> CCR1 = 0; //Start without beeping
 	
 	//main output enable
 	SET_BITS(TIM4->BDTR, TIM_BDTR_MOE);
@@ -59,11 +58,15 @@ void InitBeeper( void ){
 
 }
 
-void Beeper_SetFrequency( uint32_t hertz ){
+void Beep( uint32_t hertz ){
 	uint32_t periodInMillis = (1.0 / (double)hertz) * 1000;
 	uint32_t autoReloadValue = periodInMillis * 10 -1;
 	
 	TIM4->ARR = autoReloadValue;
 	TIM4 -> CCR1 = 0.5 * (TIM4->ARR + 1);
+}
+
+void StopBeep(){
+	TIM4 -> CCR1 = 0;
 }
 

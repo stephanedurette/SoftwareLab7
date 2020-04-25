@@ -3,11 +3,11 @@
 <title>Static Call Graph - [.\Objects\lab.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\lab.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sat Apr 25 08:56:50 2020
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060750: Last Updated: Sat Apr 25 09:51:33 2020
 <BR><P>
 <H3>Maximum Stack Usage =         72 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
-__rt_entry_main &rArr; main &rArr; Beeper_SetFrequency &rArr; __aeabi_dmul
+__rt_entry_main &rArr; main &rArr; Beep &rArr; __aeabi_dmul
 <P>
 <H3>
 Functions with no stack information
@@ -237,7 +237,7 @@ Global Symbols
 
 <P><STRONG><a name="[69]"></a>__rt_entry_main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$0000000D))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72 + Unknown Stack Size
-<LI>Call Chain = __rt_entry_main &rArr; main &rArr; Beeper_SetFrequency &rArr; __aeabi_dmul
+<LI>Call Chain = __rt_entry_main &rArr; main &rArr; Beep &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[6a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exit
@@ -619,8 +619,8 @@ Global Symbols
 
 <P><STRONG><a name="[ad]"></a>__semihosting_library_function</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, indicate_semi.o(.text), UNUSED)
 
-<P><STRONG><a name="[73]"></a>Beeper_SetFrequency</STRONG> (Thumb, 120 bytes, Stack size 40 bytes, beeper.o(i.Beeper_SetFrequency))
-<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = Beeper_SetFrequency &rArr; __aeabi_dmul
+<P><STRONG><a name="[73]"></a>Beep</STRONG> (Thumb, 120 bytes, Stack size 40 bytes, beeper.o(i.Beep))
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = Beep &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ui2d
@@ -635,7 +635,7 @@ Global Symbols
 <LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCDinit
 </UL>
 
-<P><STRONG><a name="[7e]"></a>InitBeeper</STRONG> (Thumb, 232 bytes, Stack size 0 bytes, beeper.o(i.InitBeeper))
+<P><STRONG><a name="[7e]"></a>InitBeeper</STRONG> (Thumb, 206 bytes, Stack size 0 bytes, beeper.o(i.InitBeeper))
 <BR><BR>[Called By]<UL><LI><a href="#[6a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
@@ -676,12 +676,12 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[6a]"></a>main</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, main.o(i.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = main &rArr; Beeper_SetFrequency &rArr; __aeabi_dmul
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = main &rArr; Beep &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;System_Clock_Init
 <LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCDinit
 <LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;InitBeeper
-<LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beeper_SetFrequency
+<LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beep
 </UL>
 <BR>[Called By]<UL><LI><a href="#[69]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_main
 </UL>
@@ -689,7 +689,7 @@ Global Symbols
 <P><STRONG><a name="[75]"></a>__aeabi_ddiv</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, ddiv.o(x$fpl$ddiv))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __aeabi_ddiv
 </UL>
-<BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beeper_SetFrequency
+<BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beep
 </UL>
 
 <P><STRONG><a name="[7f]"></a>_ddiv</STRONG> (Thumb, 552 bytes, Stack size 32 bytes, ddiv.o(x$fpl$ddiv), UNUSED)
@@ -700,7 +700,7 @@ Global Symbols
 <P><STRONG><a name="[77]"></a>__aeabi_d2uiz</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, dfixu.o(x$fpl$dfixu))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __aeabi_d2uiz
 </UL>
-<BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beeper_SetFrequency
+<BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beep
 </UL>
 
 <P><STRONG><a name="[82]"></a>_dfixu</STRONG> (Thumb, 90 bytes, Stack size 32 bytes, dfixu.o(x$fpl$dfixu), UNUSED)
@@ -708,7 +708,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[74]"></a>__aeabi_ui2d</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, dflt_clz.o(x$fpl$dfltu))
-<BR><BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beeper_SetFrequency
+<BR><BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beep
 </UL>
 
 <P><STRONG><a name="[ae]"></a>_dfltu</STRONG> (Thumb, 38 bytes, Stack size 0 bytes, dflt_clz.o(x$fpl$dfltu), UNUSED)
@@ -716,7 +716,7 @@ Global Symbols
 <P><STRONG><a name="[76]"></a>__aeabi_dmul</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, dmul.o(x$fpl$dmul))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __aeabi_dmul
 </UL>
-<BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beeper_SetFrequency
+<BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Beep
 </UL>
 
 <P><STRONG><a name="[83]"></a>_dmul</STRONG> (Thumb, 332 bytes, Stack size 32 bytes, dmul.o(x$fpl$dmul), UNUSED)

@@ -3,8 +3,9 @@
 #include "stm32l476xx.h"
 
 void InitBeeper( void );
-void Beeper_SetFrequency( uint32_t hertz );
+void Beep( uint32_t hertz );
 
+void StopBeep( void );
 
 #endif
 
