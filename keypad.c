@@ -57,11 +57,11 @@ enum Keys GetKey( void ){
 		//Check the columns
 		for(int j = 1; j < 4; j++){
 			if(GPIOA->IDR & (1UL << j)){
-				return (enum Keys) (i*COLUMNS + j);
+				return  ((i-12)*COLUMNS + (j-1));
 			}
 		}		
 		if(GPIOA->IDR & (1UL << 5)){
-			return (enum Keys) (i*COLUMNS + 5);
+			return ((i-12)*COLUMNS + (5-1));
 		}
 		
 		GPIOE->MODER &= ~(1<<(1*i)); //turn off row
