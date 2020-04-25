@@ -23,7 +23,7 @@ int toneFrequencies[16] = {C3, D3, E3, F3, G3, A3, B3, C4, D4, E4, F4, G4, A4, B
 
 int main(void){
 	System_Clock_Init(); 	// Switch System Clock = 80 MHz
-	//LED_Init();						// Init GPIO bits to drive LEDs
+	LED_Init();						// Init GPIO bits to drive LEDs
 	LCDinit();
 	InitBeeper();
 	Beep(C4);

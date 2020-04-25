@@ -13,3 +13,4 @@
 .\objects\main.o: utils.h
 .\objects\main.o: Beeper.h
 .\objects\main.o: Notes.h
+.\objects\main.o: keypad.h
