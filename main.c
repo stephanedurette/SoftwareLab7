@@ -12,10 +12,9 @@
 #include "Beeper.h"
 #include "Notes.h"
 
-// delay count between changing LED states
-#define DELAY_COUNT 10000000UL
-#define DELAY for( uint32_t i = 0; i < DELAY_COUNT; i++)
-#define FOREVER for(;;)
+#define DELAY_COUNT 	10000000UL
+#define DELAY 				for( uint32_t i = 0; i < DELAY_COUNT; i++)
+#define FOREVER 			for(;;)
 
 
 int toneFrequencies[16] = {C3, D3, E3, F3, G3, A3, B3, C4, D4, E4, F4, G4, A4, B4, C5, D5};
