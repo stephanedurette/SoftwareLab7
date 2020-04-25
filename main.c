@@ -11,6 +11,7 @@
 #include "lcd.h"
 #include "Beeper.h"
 #include "Notes.h"
+#include "keypad.h"
 
 #define DELAY_COUNT 	10000000UL
 #define DELAY 				for( uint32_t i = 0; i < DELAY_COUNT; i++)
