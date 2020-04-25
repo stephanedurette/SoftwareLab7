@@ -72,10 +72,13 @@ enum Keys GetKey( void ){
 	
 	for (int j = 0; j < len; j++){
 		GPIOE -> ODR |= (1UL << outputs[j]); //Set Current output
-	
+	  
+		int numberPressed = -1;
+		
 		for (int i = 0; i < len; i++){
 			if (!(GPIOA -> IDR & (1UL << inputs[i]))){
 				//return (enum Keys)(j * len + i);
+				numberPressed = j * len + 1;
 			}
 		}
 		volatile uint8_t Idr1 = (GPIOA -> IDR & 1UL << 1) >> 1;
@@ -83,7 +86,6 @@ enum Keys GetKey( void ){
 		volatile uint8_t Idr3 = (GPIOA -> IDR & 1UL << 3) >> 3;
 		volatile uint8_t Idr5 = (GPIOA -> IDR & 1UL << 5) >> 5;
 		volatile uint16_t Odr = (GPIOE -> ODR >> 12) & 0xF;
-		//int keyPressed = (!(GPIOA -> IDR & (1UL << inputs[i])));
 		
 		GPIOE -> ODR &= ~(1UL << outputs[j]); //Set Current output
 	}
