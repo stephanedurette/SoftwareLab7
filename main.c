@@ -9,6 +9,7 @@
 #include "SysClock.h"
 #include "LED.h"
 #include "lcd.h"
+#include "Beeper.h"
 
 // delay count between changing LED states
 #define DELAY_COUNT 10000000UL
@@ -17,12 +18,14 @@
 
 int main(void){
 	System_Clock_Init(); 	// Switch System Clock = 80 MHz
-	LED_Init();						// Init GPIO bits to drive LEDs
+	//LED_Init();						// Init GPIO bits to drive LEDs
 	LCDinit();
+	InitBeeper();
+	Beeper_SetFrequency(440);
 	
 	FOREVER {
-		LCDclear();
-		Green_LED_Toggle();
+		//LCDclear();
+		//Green_LED_Toggle();
 		DELAY;	
 	}
 	

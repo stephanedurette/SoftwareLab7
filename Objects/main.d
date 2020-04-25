@@ -11,3 +11,4 @@
 .\objects\main.o: LED.h
 .\objects\main.o: lcd.h
 .\objects\main.o: utils.h
+.\objects\main.o: Beeper.h

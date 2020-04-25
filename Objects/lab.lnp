@@ -4,6 +4,7 @@
 ".\objects\sysclock.o"
 ".\objects\startup_stm32l476xx.o"
 ".\objects\lcd.o"
+".\objects\beeper.o"
 --strict --scatter ".\Objects\lab.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
