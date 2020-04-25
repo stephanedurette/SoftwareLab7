@@ -2,22 +2,27 @@
 #include "LED.h"
 #include "utils.h"
 
+#define DELAY 				for( uint32_t i = 0; i < DELAY_COUNT; i++)
+#define DELAY_COUNT 	10000000UL
+
 uint8_t len = 4;
-uint16_t outputs[] = {12, 13, 14, 15};
+uint16_t outputs[] = {15, 14, 13, 12};
 uint16_t inputs[] = {1, 2, 3, 5};
+
+
 
 //Initializes pins used as keyboard columns and rows
 void InitKeypad(){
 	RCC->AHB2ENR |=   RCC_AHB2ENR_GPIOAEN | RCC_AHB2ENR_GPIOEEN;
 	
 	for(int i = 0; i < len; i++){
-		FORCE_BITS(GPIOE -> MODER, 0x11 << (2 * outputs[i]), 0x01 << (2 * outputs[i])); //digital output = 0x01
-		FORCE_BITS(GPIOE -> OTYPER, 0x11 << (2 * outputs[i]), 0x01 << (2 * outputs[i])); //open drain = 0x01
-		FORCE_BITS(GPIOE -> OSPEEDR, 0x11 << (2 * outputs[i]), 0x00 << (2 * outputs[i])); //low speed = 0x00
-		FORCE_BITS(GPIOE -> PUPDR, 0x11 << (2 * outputs[i]), 0x01 << (2 * outputs[i])); //pull up = 0x01
+		FORCE_BITS(GPIOE -> MODER, 0x03 << (2 * outputs[i]), 0x01 << (2 * outputs[i])); //digital output = 0x01
+		FORCE_BITS(GPIOE -> OTYPER, 1 << (2 * outputs[i]), 0x01 << (2 * outputs[i])); //open drain = 0x01
+		FORCE_BITS(GPIOE -> OSPEEDR, 0x03 << (2 * outputs[i]), 0x00 << (2 * outputs[i])); //low speed = 0x00
+		FORCE_BITS(GPIOE -> PUPDR, 0x03 << (2 * outputs[i]), 0x01 << (2 * outputs[i])); //pull up = 0x01
 		
-		FORCE_BITS(GPIOA -> MODER, 0x11 << (2 * inputs[i]), 0x00 << (2 * inputs[i])); //input mode = 0x00
-		FORCE_BITS(GPIOA -> PUPDR, 0x11 << (2 * inputs[i]), 0x01 << (2 * inputs[i])); //pull up= 0x01
+		FORCE_BITS(GPIOA -> MODER, 0x03 << (2 * inputs[i]), 0x00 << (2 * inputs[i])); //input mode = 0x00
+		FORCE_BITS(GPIOA -> PUPDR, 0x03 << (2 * inputs[i]), 0x10 << (2 * inputs[i])); //pull up= 0x01
 	}
 	/*
 		// Enable GPIOs clock // 	
@@ -69,15 +74,17 @@ void InitKeypad(){
 //Returns what key is pressed in the form of Key enum
 enum Keys GetKey( void ){
 	
+	GPIOE->MODER &= 0xFFFF;
+	
 	for(int i = 0; i < len; i++){
 		GPIOE -> MODER |= 1 << outputs[i];
-		
+
 		for(int j = 0; j < len; j++){
-			if (GPIOA -> IDR & (1UL << inputs[j])){
+			if (!(GPIOA -> IDR & (1UL << inputs[j]))){
 				return (enum Keys)(i * len + j);
 			}
 		}
-		
+
 		GPIOE -> MODER &= ~(1 << outputs[i]);
 	}
 	
