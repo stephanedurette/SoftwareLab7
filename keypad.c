@@ -1,5 +1,6 @@
 #include "keypad.h"
 
+//Initializes pins used as keyboard columns and rows
 void InitKeypad(){
 	
 		/* Enable GPIOs clock */ 	
@@ -43,3 +44,29 @@ void InitKeypad(){
 	
 	return;
 }
+
+//Scans the Keypad
+//Returns what key is pressed in the form of Key enum
+enum Keys GetKey( void ){
+	
+	//Pull each one of the rows low
+	for(int i = 12; i < 16; i++){
+		GPIOE->MODER |= (1<<(1*i)); //Turn on row
+		
+		//Check the columns
+		for(int j = 1; j < 4; j++){
+			if(GPIOA->IDR & (1UL << j)){
+				return (enum Keys) (i*COLUMNS) + j;
+			}
+		}		
+		if(GPIOA->IDR & (1UL << 5)){
+			return (enum Keys) (i*COLUMNS) + 5;
+		}
+		
+		GPIOE->MODER &= ~(1<<(1*i)); //turn off row
+	}
+	
+	return Key_None;
+}
+
+

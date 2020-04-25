@@ -3,8 +3,16 @@
 
 #include "stm32l476xx.h"
 
-enum Keys {Key_None = -1, Key_1, Key_2, Key_3, Key_4, Key_5, Key_6, Key_7, Key_8, Key_9, Key_0, Key_Pound, Key_Hash, Key_A, Key_B, Key_C, Key_D};
+#define ROWS 4
+#define COLUMNS 4 
 
+enum Keys {Key_None = -1, Key_1, Key_2, Key_3, Key_A, Key_4, Key_5, Key_6,Key_B, Key_7, Key_8, Key_9, Key_C, Key_Pound, Key_0, Key_Hash, Key_D};
+
+//Scans the Keypad
+//Returns what key is pressed in the form of Key enum
 enum Keys GetKey( void );
+
+//Initializes pins used as keyboard columns and rows
+void InitKeypad();
 
 #endif
