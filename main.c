@@ -33,7 +33,11 @@ int main(void){
 		enum Keys pressed = GetKey();
 		if(pressed == Key_None){
 			StopBeep();
+			Green_LED_On();
+			Red_LED_Off();
 		} else {
+			Green_LED_Off();
+			Red_LED_On();
 			Beep(toneFrequencies[pressed]);
 		}
 	}
