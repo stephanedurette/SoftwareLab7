@@ -45,6 +45,7 @@ void InitKeypad(){
 	return;
 }
 
+<<<<<<< HEAD
 //Scans the Keypad
 //Returns what key is pressed in the form of Key enum
 enum Keys GetKey( void ){
@@ -70,3 +71,8 @@ enum Keys GetKey( void ){
 }
 
 
+=======
+enum Keys GetKey( void ){
+
+}
+>>>>>>> 4e42fdce07a41e4d70d31cd644e36019097eebd9

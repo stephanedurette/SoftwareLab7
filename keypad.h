@@ -11,8 +11,18 @@ enum Keys {Key_None = -1, Key_1, Key_2, Key_3, Key_A, Key_4, Key_5, Key_6,Key_B,
 //Scans the Keypad
 //Returns what key is pressed in the form of Key enum
 enum Keys GetKey( void );
+void InitKeypad( void );
 
+
+
+
+#endif
+
+
+<<<<<<< HEAD
 //Initializes pins used as keyboard columns and rows
 void InitKeypad();
 
 #endif
+=======
+>>>>>>> 4e42fdce07a41e4d70d31cd644e36019097eebd9
