@@ -83,7 +83,7 @@ void InitKeypad(){
 //Returns what key is pressed in the form of Key enum
 enum Keys GetKey( void ){
 
-	GPIOE -> ODR &= ~(0xF << outputs[0]); //Clear all outputs
+	GPIOE -> ODR &= 0x0FFF; //Clear all outputs
 	
 	for (int j = 0; j < len; j++){
 		GPIOE -> ODR |= (1UL << outputs[j]); //Set Current output
@@ -93,9 +93,12 @@ enum Keys GetKey( void ){
 				return (enum Keys)(j * len + i);
 			}
 		}
-		volatile uint16_t Idr = (GPIOA -> IDR >> 1) & 0x1F;
+		volatile uint8_t Idr1 = (GPIOA -> IDR & 1UL << 1) >> 1;
+		volatile uint8_t Idr2 = (GPIOA -> IDR & 1UL << 2) >> 2;
+		volatile uint8_t Idr3 = (GPIOA -> IDR & 1UL << 3) >> 3;
+		volatile uint8_t Idr5 = (GPIOA -> IDR & 1UL << 5) >> 5;
 		volatile uint16_t Odr = (GPIOE -> ODR >> 12) & 0xF;
-		
+		//int keyPressed = (!(GPIOA -> IDR & (1UL << inputs[i])));
 		
 		GPIOE -> ODR &= ~(1UL << outputs[j]); //Set Current output
 	}
