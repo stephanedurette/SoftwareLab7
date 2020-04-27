@@ -49,7 +49,7 @@ int main(void){
 			Green_LED_Off();
 			Red_LED_On();
 			Beep(toneFrequencies[pressed]);
-			//DELAY;
+			DELAY;
 		}
 	}
 	
