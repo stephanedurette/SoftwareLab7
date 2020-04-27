@@ -5,10 +5,6 @@
 #define BEEPER_PIN 6
 
 void InitBeeper( void ){
-	//uint32_t pulseWidth_uS = 200; //should at least 10uS
-	//uint32_t pulseDelay_uS = 500000;
-	
-	float dutyCycle = 0.5;
 	
 	//enable clock on port B
 	SET_BITS(RCC->AHB2ENR, RCC_AHB2ENR_GPIOBEN);
@@ -29,11 +25,11 @@ void InitBeeper( void ){
 	CLR_BITS(TIM4-> CR1, TIM_CR1_DIR);
 	
 	//prescaler
-	//TIM4->PSC = prescaleValue; --> 1kHz clock is 1ms
-	TIM4->PSC = 80000-1;
+	//TIM4->PSC = prescaleValue; --> 1MHz clock is 1us
+	TIM4->PSC = 80-1;
 	
 	//auto reload
-	TIM4->ARR = 5000 - 1; //auto reload every 500 ms 
+	TIM4->ARR = 5000000 - 1; //auto reload every 500 us 
 	
 	//clear ch 1 output cmp registers
 	CLR_BITS(TIM4->CCMR1, TIM_CCMR1_OC1M);
@@ -59,16 +55,19 @@ void InitBeeper( void ){
 }
 
 void Beep( uint32_t hertz ){
+	SET_BITS(TIM4->BDTR, TIM_BDTR_MOE);
 	SET_BITS(TIM4->CR1, TIM_CR1_CEN);
-	uint32_t periodInMillis = (1.0 / (double)hertz) * 1000;
-	uint32_t autoReloadValue = periodInMillis * 10 -1;
+	uint32_t periodInUs = (1.0 / (double)hertz) * 1000000;
+	uint32_t autoReloadValue = periodInUs * 10 -1;
 	
 	TIM4->ARR = autoReloadValue;
-	TIM4 -> CCR1 = 0.5 * (TIM4->ARR + 1);
+	//TIM4 -> CCR1 = 0.5 * (TIM4->ARR + 1);
+	TIM4 -> CCR1 = (TIM4->ARR + 1) / 2;
 }
 
 void StopBeep(){
 	CLR_BITS(TIM4->CR1, TIM_CR1_CEN);
+	CLR_BITS(TIM4->BDTR, TIM_BDTR_MOE);
 	//TIM4 -> CCR1 = 0;
 }
 

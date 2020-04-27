@@ -7,7 +7,7 @@
 #define COLUMNS 4 
 #define DEBOUNCE_COUNTER 3
 #define DEBOUNCE_DELAY_AMOUNT 8000 
-#define DEBOUNCE_DELAY for(int d = 0; d < DEBOUNCE_DELAY_AMOUNT; d++);
+#define DEBOUNCE_DELAY for(int d = 0; d < DEBOUNCE_DELAY_AMOUNT; d++)
 
 enum Keys {Key_None = -1, Key_1, Key_2, Key_3, Key_A, Key_4, Key_5, Key_6,Key_B, Key_7, Key_8, Key_9, Key_C, Key_Pound, Key_0, Key_Hash, Key_D};
 
@@ -15,7 +15,7 @@ enum Keys {Key_None = -1, Key_1, Key_2, Key_3, Key_A, Key_4, Key_5, Key_6,Key_B,
 //Returns what key is pressed in the form of Key enum
 enum Keys GetKey( void );
 void InitKeypad( void );
-uint8_t DebouncedKeyInputs();
+uint8_t DebouncedKeyInputs(void);
 
 uint8_t GetKeyPadInputs( void );
 

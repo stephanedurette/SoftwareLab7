@@ -101,12 +101,12 @@ uint8_t DebouncedKeyInputs(){
 	for(int i = 0; i < DEBOUNCE_COUNTER; i++){
 		
 		uint8_t newReading = GetKeyPadInputs();
-		if(idr != newReading){
+		if(idr != newReading || idr == 0xF){
 			idr = 0xF;
 			return idr;
 		}
 		
-		DEBOUNCE_DELAY;
+		//DEBOUNCE_DELAY;
 	}
 	
 	return idr;
