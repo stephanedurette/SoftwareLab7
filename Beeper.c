@@ -59,6 +59,7 @@ void InitBeeper( void ){
 }
 
 void Beep( uint32_t hertz ){
+	SET_BITS(TIM4->CR1, TIM_CR1_CEN);
 	uint32_t periodInMillis = (1.0 / (double)hertz) * 1000;
 	uint32_t autoReloadValue = periodInMillis * 10 -1;
 	
@@ -67,6 +68,7 @@ void Beep( uint32_t hertz ){
 }
 
 void StopBeep(){
-	TIM4 -> CCR1 = 0;
+	CLR_BITS(TIM4->CR1, TIM_CR1_CEN);
+	//TIM4 -> CCR1 = 0;
 }
 
