@@ -64,8 +64,36 @@ void InitKeypad(){
 	*/
 }
 
+//When ODR is 0x7, IDR is always 0x7
+//Whole 789C doesn't work
+enum Keys GetKey( void ){
+	uint8_t outputValues[] = {0x7, 0xB, 0xD, 0xE};
+	int keyIndex = -1;
+	
+	for (int i = 0; i < len; i++){
+		FORCE_BITS(GPIOE->ODR, 0xF << outputs[0], outputValues[i] << outputs[0]);
+		uint8_t idr = GetKeyPadInputs();
+		
+		for (int j = 0; j < len; j++){
+			if (idr == outputValues[j]){
+				keyIndex = i*len + j;
+				return (enum Keys)(keyIndex);
+			}
+		}
+	}
+	return Key_None;
+}
 
-//Scans the Keypad
+
+uint8_t GetKeyPadInputs(){
+	  volatile uint8_t Idr1 = (GPIOA -> IDR & 1UL << 1) >> 1;
+		volatile uint8_t Idr2 = (GPIOA -> IDR & 1UL << 2) >> 2;
+		volatile uint8_t Idr3 = (GPIOA -> IDR & 1UL << 3) >> 3;
+		volatile uint8_t Idr5 = (GPIOA -> IDR & 1UL << 5) >> 5;
+		return Idr1 | (Idr2 << 1) | (Idr3 << 2) | (Idr5 << 3);
+}
+
+/*Scans the Keypad
 //Returns what key is pressed in the form of Key enum
 enum Keys GetKey( void ){
 	GPIOE -> ODR &= ~(0xF << outputs[0]); //Clear all outputs
@@ -79,6 +107,7 @@ enum Keys GetKey( void ){
 			if (!(GPIOA -> IDR & (1UL << inputs[i]))){
 				//return (enum Keys)(j * len + i);
 				numberPressed = j * len + 1;
+				break;
 			}
 		}
 		volatile uint8_t Idr1 = (GPIOA -> IDR & 1UL << 1) >> 1;
@@ -91,7 +120,7 @@ enum Keys GetKey( void ){
 	}
 	return Key_None;
 	
-	/*
+	
 	////2
 	//uint8_t len = 4;
   //uint16_t outputs[] = {12, 13, 14, 15};
@@ -129,5 +158,6 @@ enum Keys GetKey( void ){
 	}
 	
 	return Key_None;
-	*/
+	
 }
+*/

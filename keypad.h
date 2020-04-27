@@ -13,7 +13,7 @@ enum Keys {Key_None = -1, Key_1, Key_2, Key_3, Key_A, Key_4, Key_5, Key_6,Key_B,
 enum Keys GetKey( void );
 void InitKeypad( void );
 
-
+uint8_t GetKeyPadInputs( void );
 
 
 #endif
