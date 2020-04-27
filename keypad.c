@@ -72,7 +72,7 @@ enum Keys GetKey( void ){
 	
 	for (int i = 0; i < len; i++){
 		FORCE_BITS(GPIOE->ODR, 0xF << outputs[0], outputValues[i] << outputs[0]);
-		uint8_t idr = GetKeyPadInputs();
+		uint8_t idr = DebouncedKeyInputs();
 		
 		for (int j = 0; j < len; j++){
 			if (idr == outputValues[j]){
@@ -91,6 +91,25 @@ uint8_t GetKeyPadInputs(){
 		volatile uint8_t Idr3 = (GPIOA -> IDR & 1UL << 3) >> 3;
 		volatile uint8_t Idr5 = (GPIOA -> IDR & 1UL << 5) >> 5;
 		return Idr1 | (Idr2 << 1) | (Idr3 << 2) | (Idr5 << 3);
+}
+
+uint8_t DebouncedKeyInputs(){
+	
+	uint8_t idr;
+	idr = GetKeyPadInputs();
+	
+	for(int i = 0; i < DEBOUNCE_COUNTER; i++){
+		
+		uint8_t newReading = GetKeyPadInputs();
+		if(idr != newReading){
+			idr = 0xF;
+			return idr;
+		}
+		
+		DEBOUNCE_DELAY;
+	}
+	
+	return idr;
 }
 
 /*Scans the Keypad
