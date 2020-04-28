@@ -12,79 +12,47 @@ void InitKeypad(){
 	RCC->AHB2ENR |=   RCC_AHB2ENR_GPIOAEN | RCC_AHB2ENR_GPIOEEN;
 	
 	for(uint8_t i = 0; i < len; i++){
+		//Initialize the rows
 		FORCE_BITS(GPIOE -> MODER, 3UL << (2 * outputs[i]), 1UL << (2 * outputs[i])); //digital output = 01
 		FORCE_BITS(GPIOE -> OTYPER, 1UL << (outputs[i]), 1UL << (outputs[i])); //open drain = 1, push pull = 0
 		FORCE_BITS(GPIOE -> OSPEEDR, 3UL << (2 * outputs[i]), 0 << (2 * outputs[i])); //low speed = 00
 		FORCE_BITS(GPIOE -> PUPDR, 3UL << (2 * outputs[i]), 1UL << (2 * outputs[i])); //pull up = 01
 		
+		//Initialize the columns
 		FORCE_BITS(GPIOA -> MODER, 3UL << (2 * inputs[i]), 0 << (2 * inputs[i])); //input mode = 00
 		FORCE_BITS(GPIOA -> PUPDR, 3UL << (2 * inputs[i]), 1UL << (2 * inputs[i])); //pull up= 01
 	}
-	/*
-		// Enable GPIOs clock // 	
-	RCC->AHB2ENR |=   RCC_AHB2ENR_GPIOAEN | RCC_AHB2ENR_GPIOEEN;
-	
-	//GPIO init Rows as open drain output with pullups enabled PE12 through PE15
-	for(int i = 12; i < 16; i++){
-		GPIOE->MODER &= ~(3UL << (2*i)); //clear mode bits
-		GPIOE->MODER |= 1UL<<(2*i); //mode 01 = digital output
-		
-		//set output of pin as open drain
-		// 0 = push pull
-		// 1 = open drain
-		GPIOE->OTYPER |= (1UL<<(2*i));
-		
-		//set the output speed of the pin a low
-		// 00 = low speed
-		GPIOE->OSPEEDR &= ~(3U<<(2*i));
-	
-		//set pins as pull up = 01
-		GPIOE->PUPDR &= ~(3UL<<(2*i));
-		GPIOE->PUPDR |= (1UL<<(2*i));
-		
-	}
-	
-	//Set up input pins for the columns PA1,PA2,PA3 and PA5 as inputs with pull up
-	for(uint16_t i = 1; i < 4; i++){	
-		GPIOA->MODER &= (~3UL << (2 * i));
-	}
-	GPIOA->MODER &= (~3UL << (2 * 5));
-	
-	
-	//All columns have pull up
-	for(uint16_t i = 1; i < 4; i++){	
-		GPIOA->PUPDR |= (2UL << (2 * i));
-		GPIOA->PUPDR &= ~(1UL << (2 * i)); 
-	}
-	GPIOA->PUPDR |= (2UL << (2 * 5));
-	GPIOA->PUPDR &= ~(1UL << (2 * 5)); 
-	
-	
-	return;
-	*/
+
 }
 
 //When ODR is 0x7, IDR is always 0x7
-//Whole 789C doesn't work
+/* Read key input from keypad by cycling through rows and connecting them to
+*  ground through open drain. Then cycling through the columns and checking which is
+*  low. Returns an enum representing pressed key by column and row.
+*/
 enum Keys GetKey( void ){
 	uint8_t outputValues[] = {0x7, 0xB, 0xD, 0xE};
 	int keyIndex = -1;
 	
 	for (int i = 0; i < len; i++){
+		
 		FORCE_BITS(GPIOE->ODR, 0xF << outputs[0], outputValues[i] << outputs[0]);
-		uint8_t idr = DebouncedKeyInputs();
+		uint8_t idr = DebouncedKeyInputs(); //get debounced input
 		
 		for (int j = 0; j < len; j++){
 			if (idr == outputValues[j]){
 				keyIndex = i*len + j;
-				return (enum Keys)(keyIndex);
+				return (enum Keys)(keyIndex); //convert loop variables into key enum
 			}
 		}
 	}
 	return Key_None;
 }
 
-
+/* GetKeyPadInputs 
+*  Checks the value in the columns of the keypad and returns 
+*  which columns are currently on
+*/
 uint8_t GetKeyPadInputs(){
 	  volatile uint8_t Idr1 = (GPIOA -> IDR & 1UL << 1) >> 1;
 		volatile uint8_t Idr2 = (GPIOA -> IDR & 1UL << 2) >> 2;
@@ -93,6 +61,11 @@ uint8_t GetKeyPadInputs(){
 		return Idr1 | (Idr2 << 1) | (Idr3 << 2) | (Idr5 << 3);
 }
 
+/*Reads key pad inputs a given number of times with a small delay in
+* between. If the key read is not the same as the first read one of the times
+* within the count return no key pressed otherwise return value of keypress.
+* Some what helps to debounce input on the keypad
+*/
 uint8_t DebouncedKeyInputs(){
 	
 	uint8_t idr;
@@ -106,77 +79,9 @@ uint8_t DebouncedKeyInputs(){
 			return idr;
 		}
 		
-		//DEBOUNCE_DELAY;
+		DEBOUNCE_DELAY;
 	}
 	
 	return idr;
 }
 
-/*Scans the Keypad
-//Returns what key is pressed in the form of Key enum
-enum Keys GetKey( void ){
-	GPIOE -> ODR &= ~(0xF << outputs[0]); //Clear all outputs
-	
-	for (int j = 0; j < len; j++){
-		GPIOE -> ODR |= (1UL << outputs[j]); //Set Current output
-	  
-		int numberPressed = -1;
-		
-		for (int i = 0; i < len; i++){
-			if (!(GPIOA -> IDR & (1UL << inputs[i]))){
-				//return (enum Keys)(j * len + i);
-				numberPressed = j * len + 1;
-				break;
-			}
-		}
-		volatile uint8_t Idr1 = (GPIOA -> IDR & 1UL << 1) >> 1;
-		volatile uint8_t Idr2 = (GPIOA -> IDR & 1UL << 2) >> 2;
-		volatile uint8_t Idr3 = (GPIOA -> IDR & 1UL << 3) >> 3;
-		volatile uint8_t Idr5 = (GPIOA -> IDR & 1UL << 5) >> 5;
-		volatile uint16_t Odr = (GPIOE -> ODR >> 12) & 0xF;
-		
-		GPIOE -> ODR &= ~(1UL << outputs[j]); //Set Current output
-	}
-	return Key_None;
-	
-	
-	////2
-	//uint8_t len = 4;
-  //uint16_t outputs[] = {12, 13, 14, 15};
-  //uint16_t inputs[] = {1, 2, 3, 5};
-	for(int i = 0; i < len; i++){
-		GPIOE -> MODER |= 1 << outputs[i];
-		
-		for(int j = 0; j < len; j++){
-			if (GPIOA -> IDR & (1UL << inputs[j])){
-				return (enum Keys)(i * len + j);
-			}
-		}
-		
-		GPIOE -> MODER &= ~(1 << outputs[i]);
-	}
-	return Key_None;
-	
-	
-	///3
-	//Pull each one of the rows low
-	for(int i = 12; i < 16; i++){
-		GPIOE->MODER |= (1<<(1*i)); //Turn on row
-		
-		//Check the columns
-		for(int j = 1; j < 4; j++){
-			if(GPIOA->IDR & (1UL << j)){
-				return  ((i-12)*COLUMNS + (j-1));
-			}
-		}		
-		if(GPIOA->IDR & (1UL << 5)){
-			return ((i-12)*COLUMNS + (5-1));
-		}
-		
-		GPIOE->MODER &= ~(1<<(1*i)); //turn off row
-	}
-	
-	return Key_None;
-	
-}
-*/
