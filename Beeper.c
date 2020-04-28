@@ -55,19 +55,18 @@ void InitBeeper( void ){
 }
 
 void Beep( uint32_t hertz ){
-	SET_BITS(TIM4->BDTR, TIM_BDTR_MOE);
+	SET_BITS(TIM4->BDTR, TIM_BDTR_MOE); //Turn beeper on
 	SET_BITS(TIM4->CR1, TIM_CR1_CEN);
-	uint32_t periodInUs = (1.0 / (double)hertz) * 1000000;
-	uint32_t autoReloadValue = periodInUs * 10 -1;
+	
+	uint32_t periodInUs = (1.0 / (double)hertz) * 1000000; //get uS period
+	uint32_t autoReloadValue = periodInUs * 10 -1; 
 	
 	TIM4->ARR = autoReloadValue;
-	//TIM4 -> CCR1 = 0.5 * (TIM4->ARR + 1);
-	TIM4 -> CCR1 = (TIM4->ARR + 1) / 2;
+	TIM4 -> CCR1 = (TIM4->ARR + 1) / 2; //the capure compare is the period / 2 for a 50% duty cycle
 }
 
 void StopBeep(){
-	CLR_BITS(TIM4->CR1, TIM_CR1_CEN);
+	CLR_BITS(TIM4->CR1, TIM_CR1_CEN); //turn beeper off
 	CLR_BITS(TIM4->BDTR, TIM_BDTR_MOE);
-	//TIM4 -> CCR1 = 0;
 }
 

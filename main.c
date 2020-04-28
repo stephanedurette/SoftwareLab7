@@ -23,35 +23,21 @@ int main(void){
 	enum Keys pressed;
 	System_Clock_Init(); 	// Switch System Clock = 80 MHz
 	LED_Init();						// Init GPIO bits to drive LEDs
-	LCDinit();
-	InitKeypad();
-	InitBeeper();
-	//Beep(C4);
-	
-	/*
-		for (int i = 0; i < 16; i++){
-			Beep(toneFrequencies[i]);
-			DELAY;
-			StopBeep();
-			DELAY;
-		}
-	*/
-
+	InitKeypad();					//Init beeper pin
+	InitBeeper();					//Init keypad pin
 	
 	FOREVER {
 		pressed = GetKey();
-		if(pressed == Key_None){
+		if(pressed == Key_None){	//No Key
 			StopBeep();
 			Green_LED_On();
 			Red_LED_Off();
-			//DELAY;
-		} else {
+		} else {									//A key was pressed
 			Green_LED_Off();
 			Red_LED_On();
 			Beep(toneFrequencies[pressed]);
 			DELAY;
 		}
 	}
-	
 } 
 
